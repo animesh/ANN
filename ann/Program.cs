@@ -45,6 +45,8 @@ namespace ANN4CS
                 error += Math.Pow(outputr[j] - outputc[j], 2) / 2;
                 Debug.Write(j + Environment.NewLine + error + Environment.NewLine);
             }
+
+
             //Debug.Write(Environment.NewLine + error + Environment.NewLine);
             Console.WriteLine("Error = {0}", error);
             matrix myMatrix = new matrix();
