@@ -6,20 +6,18 @@ namespace ANN4CS
     {
         static void Main(string[] args)
         {
-            System.Random random = new System.Random();
-            Console.WriteLine("parameter count = {0}", args.Length);
-            double[] input = new double[] { 0.5, 0.1 };
+            double[] input = new double[] { 0.05, 0.10 };
             double[,] inpw = new double[,] { { 0.15, 0.20 }, { 0.25, 0.3 } };
             double[] hidden = new double[2];
             double[,] hidw = new double[,] { { 0.4, 0.45 }, { 0.5, 0.55 } };
             double[] outputc = new double[2];
-            double[] outputr = new double[] { 0.99, 0.01 };
+            double[] outputr = new double[] { 0.01, 0.99 };
             double[] bias = new double[] { 0.35, 0.6 };
             double[] cons = new double[] { 1, 1 };
             double lr = 0.5;
             double error = 1;
             double iter = 0;
-            while (iter < 1000)
+            while (iter < 10000)
             {
                 iter++;
                 error = 0;
@@ -28,12 +26,10 @@ namespace ANN4CS
                     double collin = 0;
                     for (int i = 0; i < input.Length; i++)
                     {
-                        //Debug.Write(input[i] + Environment.NewLine + inpw[j, i] + Environment.NewLine);
                         collin += inpw[j, i] * input[i];
                     }
                     collin += bias[0] * cons[0];
                     collin = 1 / (1 + Math.Pow(Math.E, -1 * collin));
-                    //Debug.Write(Environment.NewLine + collin + Environment.NewLine);
                     hidden[j] = collin;
                 }
                 for (int j = 0; j < hidw.GetLength(0); j++)
@@ -41,20 +37,14 @@ namespace ANN4CS
                     double collin = 0;
                     for (int i = 0; i < hidden.Length; i++)
                     {
-                        //Debug.Write(hidden[i] + Environment.NewLine + hidw[j, i] + Environment.NewLine);
                         collin += hidw[j, i] * hidden[i];
                     }
                     collin += bias[1] * cons[1];
                     collin = 1 / (1 + Math.Pow(Math.E, -collin));
-                    //Debug.Write(Environment.NewLine + collin + Environment.NewLine);
                     outputc[j] = collin;
                     error += Math.Pow(outputr[j] - outputc[j], 2) / 2;
-                    //Debug.Write(j + Environment.NewLine + error + Environment.NewLine);
                 }
 
-
-                //Debug.Write(Environment.NewLine + error + Environment.NewLine);
-                Console.WriteLine("Error = {0}", error);
                 for (int i = 0; i < input.Length; i++)
                 {
                     for (int j = 0; j < inpw.GetLength(0); j++)
@@ -62,32 +52,23 @@ namespace ANN4CS
                         double delin = 0;
                         for (int k = 0; k < hidw.GetLength(0); k++)
                         {
-                          //  Debug.Write(hidw[k, j] + Environment.NewLine + (outputc[k] - outputr[k]) + Environment.NewLine + outputc[k] * (1 - outputc[k]) + Environment.NewLine + hidden[k] + Environment.NewLine);
                             delin += (outputc[k] - outputr[k])*outputc[k] * (1 - outputc[k]) * hidw[k, j];
                         }
-                        //Debug.Write(inpw[j, i] + Environment.NewLine + hidden[j] * (1 - hidden[j]) + Environment.NewLine + input[j] + Environment.NewLine + error + Environment.NewLine);
                         inpw[j, i] -= lr*delin*hidden[j] * (1 - hidden[j]) * input[i];
-                        Debug.Write(inpw[j, i] +  Environment.NewLine);
                     }
                 }
                 for (int i = 0; i < hidden.Length; i++)
                 {
                     for (int j = 0; j < hidw.GetLength(0); j++)
                     {
-                        //Debug.Write(hidw[j, i] + Environment.NewLine + (outputc[j] - outputr[j]) + Environment.NewLine + outputc[j] * (1 - outputc[j]) + Environment.NewLine + hidden[j] + Environment.NewLine);
                         hidw[j, i] -= lr * (outputc[j] - outputr[j]) * outputc[j] * (1 - outputc[j]) * hidden[i];
-                        Debug.Write(hidw[j, i] + Environment.NewLine + outputc[j] + Environment.NewLine);
                     }
                 }
-                Debug.Write(iter + Environment.NewLine + error + Environment.NewLine);
+                Console.WriteLine("Iteration = {0}\tError = {1}\tOutputs = {2}\t{03}", iter, error, outputc[0], outputc[1]);
+                Debug.Write(iter + Environment.NewLine + error + Environment.NewLine + outputc[0] + Environment.NewLine + outputc[1] + Environment.NewLine);
 
 
             }
-            matrix myMatrix = new matrix();
         }
-    }
-    class matrix
-    {
-        public int rownum { get; set; }
     }
 }
