@@ -17,10 +17,13 @@ namespace ANN4CS
             double lr = 0.5;
             double error = 1;
             double iter = 0;
+
             while (iter < 10000)
             {
+              Console.WriteLine("Iter {0}<=>Error {1}",iter,error);
                 iter++;
                 error = 0;
+
                 for (int j = 0; j < inpw.GetLength(0); j++)
                 {
                     double collin = 0;
@@ -30,7 +33,9 @@ namespace ANN4CS
                     }
                     collin += bias[0] * cons[0];
                     collin = 1 / (1 + Math.Pow(Math.E, -1 * collin));
+                    Console.WriteLine("collin {0}<=> hidden {1}",collin,hidden[j]);
                     hidden[j] = collin;
+
                 }
                 for (int j = 0; j < hidw.GetLength(0); j++)
                 {
@@ -41,6 +46,7 @@ namespace ANN4CS
                     }
                     collin += bias[1] * cons[1];
                     collin = 1 / (1 + Math.Pow(Math.E, -collin));
+                    Console.WriteLine("collin {0}<=> outputc {1}",collin,outputc[j]);
                     outputc[j] = collin;
                     error += Math.Pow(outputr[j] - outputc[j], 2) / 2;
                 }
@@ -53,15 +59,20 @@ namespace ANN4CS
                         for (int k = 0; k < hidw.GetLength(0); k++)
                         {
                             delin += (outputc[k] - outputr[k])*outputc[k] * (1 - outputc[k]) * hidw[k, j];
+                            //Console.WriteLine("delin{0},outputc{1},outputr{2},hidw{3}",delin,outputc[k],outputr[k],hidw[k,j]);
                         }
                         inpw[j, i] -= lr*delin*hidden[j] * (1 - hidden[j]) * input[i];
+                        Console.WriteLine("inpw{0},delin{1},hidden{2},input{3},diff{4}",inpw[j, i] ,delin,hidden[j],input[i],lr*delin*hidden[j] * (1 - hidden[j]) * input[i]);
                     }
                 }
+
                 for (int i = 0; i < hidden.Length; i++)
                 {
                     for (int j = 0; j < hidw.GetLength(0); j++)
                     {
+                      Console.WriteLine("{0}-{1}*({2}-{3})*{2}*(1-{2})*{4}=>{5}",hidw[j,i],lr,outputc[j],outputr[j],hidden[i],lr*(outputc[j]-outputr[j])*(1-outputc[j])*outputc[j]*hidden[i]);
                         hidw[j, i] -= lr * (outputc[j] - outputr[j]) * outputc[j] * (1 - outputc[j]) * hidden[i];
+			                     Console.WriteLine("j{0},i{1},hidw=>{2}",j,i,hidw[j,i]);
                     }
                 }
                 Console.WriteLine("Iteration = {0}\tError = {1}\tOutputs = {2}\t{03}", iter, error, outputc[0], outputc[1]);
