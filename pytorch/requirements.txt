@@ -1,0 +1,14 @@
+# PyTorch Neural Network Implementation Requirements
+
+# Core PyTorch (CPU version - for GPU, see https://pytorch.org/get-started/locally/)
+torch>=2.0.0
+
+# Numerical computing
+numpy>=1.21.0
+
+# Visualization (optional)
+matplotlib>=3.5.0
+
+# For comparison with other implementations
+# Note: TensorFlow and other dependencies are optional
+# tensorflow>=2.10.0  # Uncomment for cross-framework comparison
